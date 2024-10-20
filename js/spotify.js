@@ -24,7 +24,7 @@ function formatSecondsToMMSS(seconds) {
 
 async function getSongs(folder) {
     currFolder = folder;
-    let a = await fetch(`${folder}/`)  //This willv get you to the songs foldder
+    let a = await fetch(`./${folder}/`)  //This willv get you to the songs foldder
     let response = await a.text();
 
     let div = document.createElement("div")
@@ -35,7 +35,7 @@ async function getSongs(folder) {
     for (let index = 2; index < as.length; index++) {
         const element = as[index];
         if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`/${folder}/`)[1])
+            songs.push(element.href.split(`./${folder}/`)[1])
             // console.log( songs.push(element.href.split("/songs/")[1]))
         }
     }
@@ -70,10 +70,10 @@ async function getSongs(folder) {
 }
 const playMusic = (track, pause = false) => {
     // let audio= new Audio("/songs/" + track)
-    currentSong.src = `/${currFolder}/` + track
+    currentSong.src = `./songs/${currFolder}/` + track
     if (!pause) {
         currentSong.play()
-        play.src = "img/pause.svg"
+        play.src = "./img/pause.svg"
     }
     document.querySelector(".songInfo").innerHTML = decodeURI(track)
     document.querySelector(".songTime").innerHTML = "00:00/00:00"
@@ -83,7 +83,7 @@ const playMusic = (track, pause = false) => {
 // Function to show all the albums
 async function displayAlbums() {
     console.log("displaying albums")
-    let a = await fetch(`songs/`)  //This will get you to the songs foldder
+    let a = await fetch(`./songs/`)  //This will get you to the songs foldder
     let response = await a.text();
     let div = document.createElement("div")
     div.innerHTML = response;
@@ -100,17 +100,17 @@ async function displayAlbums() {
             console.log(e.href.split("/songs/").slice(-1)[0]);
 
             //    Get  the metadata of the folder
-            let a = await fetch(`/songs/${folder}/info.json`)
+            let a = await fetch(`./songs/${folder}/info.json`)
             let response = await a.json();
             console.log(response)
             album.innerHTML = album.innerHTML + ` <div data-folder="${folder}" class="card  card1 ">
                                
                                     <div class="img1 ">
                                         <div class="playGreen">
-                                            <img  src="img/playGreen.svg" alt="">
+                                            <img  src="./img/playGreen.svg" alt="">
                                     </div>
                                         <img class="rounded-20"
-                                            src="/songs/${folder}/cover.png"
+                                            src="./songs/${folder}/cover.png"
                                             alt="">
                                         <div class="songName flex column ">${response.title}
                                             <div class="singer">
@@ -133,7 +133,7 @@ async function displayAlbums() {
     Array.from(document.getElementsByClassName("card")).forEach(e => { 
         e.addEventListener("click", async item => {
             console.log("Fetching Songs")
-            songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`)            
+            songs = await getSongs(`./songs/${item.currentTarget.dataset.folder}`)            
             playMusic(songs[0])
 
         })
@@ -146,7 +146,7 @@ async function displayAlbums() {
 async function main() {
 
     // Get the list of all the songs
-    await getSongs("songs/ncs")
+    await getSongs("./songs/ncs")
     playMusic(songs[0], true)
 
     // Display all the albums on  the page
@@ -157,11 +157,11 @@ async function main() {
     play.addEventListener("click", () => {
         if (currentSong.paused) {
             currentSong.play()
-            play.src = "img/pause.svg"
+            play.src = "./img/pause.svg"
         }
         else {
             currentSong.pause()
-            play.src = "img/play.svg"
+            play.src = "./img/play.svg"
         }
 
     })
@@ -227,13 +227,13 @@ async function main() {
     // Add event listner to mute the track
     document.querySelector(".volume>img ").addEventListener("click", (e) => {
         console.log(e.target);
-        if (e.target.src.includes("img/volume.svg")) {
-            e.target.src = e.target.src.replace("img/volume.svg", "img/mute.svg")
+        if (e.target.src.includes("./img/volume.svg")) {
+            e.target.src = e.target.src.replace("./img/volume.svg", "./img/mute.svg")
             currentSong.volume = 0;
             document.querySelector(".volRange").getElementsByTagName("input")[0].value = 0;
         }
         else {
-            e.target.src = e.target.src.replace("img/mute.svg", "img/volume.svg")
+            e.target.src = e.target.src.replace("./img/mute.svg", "./img/volume.svg")
             currentSong.volume = .1;
             document.querySelector(".volRange").getElementsByTagName("input")[0].value = .1;
         }
